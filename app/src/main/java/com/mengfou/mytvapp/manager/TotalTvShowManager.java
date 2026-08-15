@@ -1,5 +1,7 @@
 package com.mengfou.mytvapp.manager;
 
+import android.net.Uri;
+import android.text.TextUtils;
 import android.webkit.WebView;
 
 import com.mengfou.mytvapp.UserKeyEvent;
@@ -15,7 +17,9 @@ import java.util.List;
  */
 public class TotalTvShowManager {
     private int mCurrentShowIndex = 0;
-    private boolean currentShowIsLoadFinish = false;
+    private volatile boolean currentShowIsLoadFinish = false;
+    private volatile int mLoadSequence = 0;
+    private volatile String mExpectedPageUrl;
     private static final int TIME_OUT = 1000 * 10;
     private final ResourcesManager mResourcesManager;
     private final WebViewManager webViewManager;
@@ -33,6 +37,12 @@ public class TotalTvShowManager {
         return mCurrentShowIndex;
     }
 
+    public void setCurrentShowIndex(int index) {
+        if (index >= 0 && index < mResourcesManager.size()) {
+            mCurrentShowIndex = index;
+        }
+    }
+
     public List<ShowInfoBean> getCCTVShowInfoBeans() {
         return  mResourcesManager.getCCTVShowInfoBeans();
     }
@@ -45,18 +55,35 @@ public class TotalTvShowManager {
         if (forward == UserKeyEvent.UP) {
             mCurrentShowIndex = (mCurrentShowIndex + 1) % mResourcesManager.size();
         } else if (forward == UserKeyEvent.DOWN) {
-            mCurrentShowIndex = (mCurrentShowIndex - 1) % mResourcesManager.size();
+            mCurrentShowIndex = (mCurrentShowIndex - 1 + mResourcesManager.size()) % mResourcesManager.size();
         }
     }
 
     public void loadPage() {
-        webViewManager.loadUrl(getCCTVShowInfoBean().getUrl());
+        final int loadSequence = ++mLoadSequence;
+        setCurrentShowIsLoadFinish(false);
+        ShowInfoBean showInfoBean = getCCTVShowInfoBean();
+        if (showInfoBean == null) {
+            currentShowLoadError();
+            return;
+        }
+        mExpectedPageUrl = showInfoBean.getUrl();
+        webViewManager.stopLoading();
+        android.util.Log.i("CCTV_SWITCH", "load sequence=" + loadSequence
+                + ", index=" + mCurrentShowIndex
+                + ", name=" + showInfoBean.getName()
+                + ", url=" + mExpectedPageUrl);
+        webViewManager.loadUrl(mExpectedPageUrl);
 
         // 定义加载超时
         mThreadTool.execute(new Runnable() {
             @Override
             public void run() {
-                currentShowLoadError();
+                if (loadSequence == mLoadSequence && !currentShowIsLoadFinish) {
+                    android.util.Log.w("CCTV_SWITCH", "timeout sequence=" + loadSequence
+                            + ", url=" + mExpectedPageUrl);
+                    currentShowLoadError();
+                }
             }
         }, TIME_OUT);
     }
@@ -77,8 +104,56 @@ public class TotalTvShowManager {
         return currentShowIsLoadFinish;
     }
 
+    public boolean isCurrentPageUrl(String url) {
+        String expectedUrl = mExpectedPageUrl;
+        if (TextUtils.isEmpty(expectedUrl) || TextUtils.isEmpty(url)) {
+            return false;
+        }
+        try {
+            Uri expected = Uri.parse(expectedUrl);
+            Uri actual = Uri.parse(url);
+            String expectedHost = expected.getHost();
+            String actualHost = actual.getHost();
+            if (expectedHost == null || actualHost == null
+                    || !expectedHost.equalsIgnoreCase(actualHost)) {
+                return false;
+            }
+            String expectedPath = normalizePath(expected.getPath());
+            String actualPath = normalizePath(actual.getPath());
+            return actualPath.equals(expectedPath) || actualPath.startsWith(expectedPath + "/");
+        } catch (RuntimeException ignored) {
+            return expectedUrl.equals(url);
+        }
+    }
+
+    public boolean isCurrentPageLoaded() {
+        return isCurrentPageUrl(webViewManager.getUrl());
+    }
+
+    private String normalizePath(String path) {
+        if (TextUtils.isEmpty(path) || "/".equals(path)) {
+            return "";
+        }
+        int end = path.length();
+        while (end > 1 && path.charAt(end - 1) == '/') {
+            end--;
+        }
+        return path.substring(0, end);
+    }
     public void doStartOrStopPlay() {
-        cctvPageActionManager.doStartOrStopPlay();
+        cctvPageActionManager.play();
+    }
+
+    public void playWebVideo() {
+        cctvPageActionManager.play();
+    }
+
+    public void pauseWebVideo() {
+        cctvPageActionManager.pause();
+    }
+
+    public void toggleWebVideoPlayback() {
+        cctvPageActionManager.togglePlayback();
     }
 
     public void doFullScreen(SimpleCallbackListener listener) {
