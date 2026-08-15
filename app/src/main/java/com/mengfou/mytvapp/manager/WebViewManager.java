@@ -34,10 +34,17 @@ public class WebViewManager {
         settings.setBlockNetworkImage(true);
         settings.setLoadsImagesAutomatically(false);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        settings.setMediaPlaybackRequiresUserGesture(false);
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
+        settings.setBuiltInZoomControls(false);
+        settings.setDisplayZoomControls(false);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
+        mWebView.setHorizontalScrollBarEnabled(false);
+        mWebView.setVerticalScrollBarEnabled(false);
+        mWebView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        mWebView.setBackgroundColor(0xFF000000);
         // 预加载空白页面,提前初始化WebView
         // mWebView.loadUrl("about:blank");
     }
@@ -55,11 +62,25 @@ public class WebViewManager {
     }
 
     public void loadUrl(String url) {
-        mWebView.loadUrl(url);
+        if (mWebView != null) {
+            mWebView.loadUrl(url);
+        }
+    }
+
+    public void stopLoading() {
+        if (mWebView != null) {
+            mWebView.stopLoading();
+        }
+    }
+
+    public String getUrl() {
+        return mWebView == null ? null : mWebView.getUrl();
     }
 
     public void setVisibility(boolean visibility) {
-        mWebView.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        if (mWebView != null) {
+            mWebView.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        }
     }
 
     public void pause() {
@@ -68,12 +89,17 @@ public class WebViewManager {
     }
 
     public void clearCache() {
-        mWebView.clearCache(true);
-        mWebView.clearHistory();
+        if (mWebView != null) {
+            mWebView.clearCache(true);
+            mWebView.clearHistory();
+        }
     }
 
     public void destroy() {
-        mWebView.destroy();
-        mWebView = null;
+        if (mWebView != null) {
+            mWebView.stopLoading();
+            mWebView.destroy();
+            mWebView = null;
+        }
     }
 }

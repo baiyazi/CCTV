@@ -1,0 +1,22 @@
+[
+  {"name":"CCTV-1 综合","url":"https://tv.cctv.com/live/cctv1/m/","img":"cctv/CCTV1.png"},
+  {"name":"CCTV-2 财经","url":"https://tv.cctv.com/live/cctv2/m/","img":"cctv/CCTV2.png"},
+  {"name":"CCTV-3 综艺","url":"https://tv.cctv.com/live/cctv3/m/","img":"cctv/CCTV3.png"},
+  {"name":"CCTV-4 中文国际","url":"https://tv.cctv.com/live/cctv4/m/","img":"cctv/CCTV4.png"},
+  {"name":"CCTV-5 体育","url":"https://tv.cctv.com/live/cctv5/m/","img":"cctv/CCTV5.png"},
+  {"name":"CCTV-5+ 体育赛事","url":"https://tv.cctv.com/live/cctv5plus/m/","img":"cctv/CCTV5.png"},
+  {"name":"CCTV-6 电影","url":"https://tv.cctv.com/live/cctv6/m/","img":"cctv/CCTV6.png"},
+  {"name":"CCTV-7 国防军事","url":"https://tv.cctv.com/live/cctv7/m/","img":"cctv/CCTV7.png"},
+  {"name":"CCTV-8 电视剧","url":"https://tv.cctv.com/live/cctv8/m/","img":"cctv/CCTV8.png"},
+  {"name":"CCTV-9 纪录","url":"https://tv.cctv.com/live/cctv9/m/","img":"cctv/CCTV9.png"},
+  {"name":"CCTV-10 科教","url":"https://tv.cctv.com/live/cctv10/m/","img":"cctv/CCTV10.png"},
+  {"name":"CCTV-11 戏曲","url":"https://tv.cctv.com/live/cctv11/m/","img":"cctv/CCTV11.png"},
+  {"name":"CCTV-12 社会与法","url":"https://tv.cctv.com/live/cctv12/m/","img":"cctv/CCTV12.png"},
+  {"name":"CCTV-13 新闻","url":"https://tv.cctv.com/live/cctv13/m/","img":"cctv/CCTV13.png"},
+  {"name":"CCTV-14 少儿","url":"https://tv.cctv.com/live/cctv14/m/","img":"cctv/CCTV14.png"},
+  {"name":"CCTV-15 音乐","url":"https://tv.cctv.com/live/cctv15/m/","img":"cctv/CCTV15.png"},
+  {"name":"CCTV-16 奥林匹克","url":"https://tv.cctv.com/live/cctv16/m/","img":"cctv/CCTV16.png"},
+  {"name":"CCTV-17 农业农村","url":"https://tv.cctv.com/live/cctv17/m/","img":"cctv/CCTV17.png"},
+  {"name":"CCTV-4 欧洲","url":"https://tv.cctv.com/live/cctveurope/m/","img":"cctv/CCTV4.png"},
+  {"name":"CCTV-4 美洲","url":"https://tv.cctv.com/live/cctvamerica/m/","img":"cctv/CCTV4.png"}
+]
