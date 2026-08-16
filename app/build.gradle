@@ -11,7 +11,7 @@ android {
         minSdk 21
         targetSdk 33
         versionCode 1
-        versionName "1.0"
+        versionName "1.2.0"
 
     }
 
@@ -27,6 +27,13 @@ android {
 
     signingConfigs {
         release {
+            storeFile file("../key.debug.jks")
+            storePassword '123456'
+            keyPassword '123456'
+            keyAlias 'Key0'
+            v2SigningEnabled true
+        }
+        debug {
             storeFile file("../key.debug.jks")
             storePassword '123456'
             keyPassword '123456'
